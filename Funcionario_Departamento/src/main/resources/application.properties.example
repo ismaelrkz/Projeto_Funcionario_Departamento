@@ -1,0 +1,19 @@
+# Arquivo Modelo para application.properties
+
+# Copie este arquivo para application.properties e preencha suas credenciais
+
+# 1. Nome da aplicação:
+spring.application.name=Projeto_Labels_Keywords
+
+# 2. URL do Banco de Dados MySQL: protocolo://servidor:porta/nome_da_base?parâmetros
+spring.datasource.url=jdbc:mysql://localhost:3306/seu_banco?serverTimezone=UTC
+
+# 3. Credenciais de acesso locais ao MySQL:
+spring.datasource.username= [usuário]
+spring.datasource.password= [senha]
+
+# 4. Estratégia de validação do Hibernate: (Mapeamento automático e Logs):
+# - Use 'update' se for a PRIMEIRA VEZ rodando o projeto (o Hibernate criará as tabelas).
+# - Use 'validate' se o seu banco MySQL já possui as tabelas criadas previamente.
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
