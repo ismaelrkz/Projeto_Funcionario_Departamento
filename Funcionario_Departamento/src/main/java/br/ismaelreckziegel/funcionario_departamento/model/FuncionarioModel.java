@@ -28,8 +28,6 @@ public class FuncionarioModel {
     @JsonIgnoreProperties({"supervisor", "departamentoFuncionario"})
     private FuncionarioModel supervisor;
 
-    //TODO: criar feature que retorne os projetos que FuncionarioModel está vinculado
-
     public Integer getIdFuncionario() {
         return idFuncionario;
     }
