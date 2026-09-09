@@ -1,5 +1,6 @@
 package br.ismaelreckziegel.funcionario_departamento.service;
 
+import br.ismaelreckziegel.funcionario_departamento.exceptions.BadRequestException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.ConflictException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.NotFoundException;
 import br.ismaelreckziegel.funcionario_departamento.model.FuncionarioModel;
@@ -24,12 +25,12 @@ public class ProjetoService {
     public ProjetoModel create(ProjetoModel projeto){
 
         if(projeto.getNomeProjeto() == null || projeto.getNomeProjeto().isBlank()){
-            throw new ConflictException("Nome do Projeto é obrigatório!");
+            throw new BadRequestException("Nome do Projeto é obrigatório!");
         }
 
         Optional<ProjetoModel> existingNome = projetoRepo.findByNomeProjeto(projeto.getNomeProjeto());
         if(existingNome.isPresent()){
-            throw new NotFoundException("Projeto já criado na base de dados!");
+            throw new ConflictException("Projeto já criado na base de dados!");
         }
 
         if(projeto.getEquipeProjeto() != null && !projeto.getEquipeProjeto().isEmpty()){
