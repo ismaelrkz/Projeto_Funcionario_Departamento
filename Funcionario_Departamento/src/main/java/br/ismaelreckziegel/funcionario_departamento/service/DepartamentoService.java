@@ -7,6 +7,7 @@ import br.ismaelreckziegel.funcionario_departamento.model.DepartamentoModel;
 import br.ismaelreckziegel.funcionario_departamento.repo.DepartamentoRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +29,10 @@ public class DepartamentoService {
             throw new ConflictException("Departamento já existente!");
         }
         return departamentoRepo.save(departamento);
+    }
+
+    public List<DepartamentoModel> readAll(){
+        return departamentoRepo.findAll();
     }
 
     public DepartamentoModel readById(Integer id){
