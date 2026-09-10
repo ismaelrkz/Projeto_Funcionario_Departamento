@@ -32,8 +32,8 @@ public class FuncionarioController {
     }
 
     @GetMapping("/funcionario/searchname") // ?name=João
-    public ResponseEntity<FuncionarioModel> readByName(@RequestParam String name){
-        return ResponseEntity.status(200).body(service.readByName(name));
+    public ResponseEntity<FuncionarioModel> readByName(@RequestParam String funcionario){
+        return ResponseEntity.status(200).body(service.readByName(funcionario));
     }
 
     @PutMapping("/funcionario/update/{id}")
@@ -41,7 +41,7 @@ public class FuncionarioController {
         return ResponseEntity.status(204).body(service.updateById(id, funcionario));
     }
 
-    @DeleteMapping("funcionario/delete/{id}")
+    @DeleteMapping("/funcionario/delete/{id}")
     public ResponseEntity<Void> deleteFuncionario(@PathVariable Integer id){
         service.deleteById(id);
         return ResponseEntity.status(204).build();

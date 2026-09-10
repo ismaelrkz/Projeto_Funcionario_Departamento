@@ -9,6 +9,7 @@ import br.ismaelreckziegel.funcionario_departamento.repo.FuncionarioRepo;
 import br.ismaelreckziegel.funcionario_departamento.repo.ProjetoRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,12 +45,16 @@ public class ProjetoService {
         return projetoRepo.save(projeto);
     }
 
+    public List<ProjetoModel> readAll(){
+        return projetoRepo.findAll();
+    }
+
     public ProjetoModel readById(Integer id){
         return projetoRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
     }
 
-    public ProjetoModel readByNome(String projeto){
+    public ProjetoModel readByName(String projeto){
         return projetoRepo.findByNomeProjeto(projeto)
                 .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
     }
