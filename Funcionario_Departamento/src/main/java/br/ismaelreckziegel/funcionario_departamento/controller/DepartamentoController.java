@@ -31,7 +31,7 @@ public class DepartamentoController {
         return ResponseEntity.status(200).body(service.readById(id));
     }
 
-    @GetMapping("/departamentos/search")
+    @GetMapping("/departamentos/searchname")// ?departamento=TI
     public ResponseEntity<DepartamentoModel> readDepartamento(@RequestParam String departamento){
         return ResponseEntity.status(200).body(service.readByName(departamento));
     }

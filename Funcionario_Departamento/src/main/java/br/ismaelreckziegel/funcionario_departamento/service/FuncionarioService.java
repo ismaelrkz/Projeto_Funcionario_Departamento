@@ -10,6 +10,7 @@ import br.ismaelreckziegel.funcionario_departamento.repo.FuncionarioRepo;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,6 +52,10 @@ public class FuncionarioService {
         }
 
         return funcionarioRepo.save(funcionario);
+    }
+
+    public List<FuncionarioModel> readAll(){
+        return funcionarioRepo.findAll();
     }
 
     public FuncionarioModel readById(Integer id){
