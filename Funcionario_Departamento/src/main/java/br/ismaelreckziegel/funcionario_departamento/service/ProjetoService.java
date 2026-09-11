@@ -1,5 +1,6 @@
 package br.ismaelreckziegel.funcionario_departamento.service;
 
+import br.ismaelreckziegel.funcionario_departamento.exceptions.BadRequestException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.ConflictException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.NotFoundException;
 import br.ismaelreckziegel.funcionario_departamento.model.FuncionarioModel;
@@ -8,6 +9,7 @@ import br.ismaelreckziegel.funcionario_departamento.repo.FuncionarioRepo;
 import br.ismaelreckziegel.funcionario_departamento.repo.ProjetoRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,12 +26,12 @@ public class ProjetoService {
     public ProjetoModel create(ProjetoModel projeto){
 
         if(projeto.getNomeProjeto() == null || projeto.getNomeProjeto().isBlank()){
-            throw new ConflictException("Nome do Projeto é obrigatório!");
+            throw new BadRequestException("Nome do Projeto é obrigatório!");
         }
 
         Optional<ProjetoModel> existingNome = projetoRepo.findByNomeProjeto(projeto.getNomeProjeto());
         if(existingNome.isPresent()){
-            throw new NotFoundException("Projeto já criado na base de dados!");
+            throw new ConflictException("Projeto já criado na base de dados!");
         }
 
         if(projeto.getEquipeProjeto() != null && !projeto.getEquipeProjeto().isEmpty()){
@@ -43,12 +45,16 @@ public class ProjetoService {
         return projetoRepo.save(projeto);
     }
 
+    public List<ProjetoModel> readAll(){
+        return projetoRepo.findAll();
+    }
+
     public ProjetoModel readById(Integer id){
         return projetoRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
     }
 
-    public ProjetoModel readByNome(String projeto){
+    public ProjetoModel readByName(String projeto){
         return projetoRepo.findByNomeProjeto(projeto)
                 .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
     }
