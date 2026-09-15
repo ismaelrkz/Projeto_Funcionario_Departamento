@@ -14,13 +14,13 @@ public class ProjetoModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idProjeto;
 
-    @Column(name = "nome_projeto", nullable = false, length = 50)
+    @Column(name = "nome_projeto")
     private String nomeProjeto;
 
     @Column(name = "data_inicio")
     private LocalDate dataInicio;
 
-    @ManyToMany
+    @ManyToMany // TODO: tornar esse relacionamento bidirecional para atender a feature de consulta do func>projetos
     @JoinTable(name = "tbl_funcionario_projeto",
             joinColumns = @JoinColumn(name = "id_projeto"),
             inverseJoinColumns = @JoinColumn(name = "id_func"))

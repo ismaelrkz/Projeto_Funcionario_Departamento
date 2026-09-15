@@ -12,7 +12,7 @@ public class FuncionarioModel {
     @Column(name = "id_func")
     private Integer idFuncionario;
 
-    @Column(name = "nome_func", length = 50)
+    @Column(name = "nome_func")
     private String nomeFuncionario;
 
     @Column(name = "salario_func")
@@ -27,6 +27,8 @@ public class FuncionarioModel {
     @JoinColumn(name = "id_supervisor")
     @JsonIgnoreProperties({"supervisor", "departamentoFuncionario"})
     private FuncionarioModel supervisor;
+
+    // TODO: Adicionar atributo List<ProjetoModel> para consulta de projetos vinculados ao id do funcionário
 
     public Integer getIdFuncionario() {
         return idFuncionario;

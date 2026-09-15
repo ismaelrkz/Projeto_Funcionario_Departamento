@@ -35,6 +35,10 @@ public class FuncionarioService {
             throw new ConflictException("Funcionário já existente");
         }
 
+        if(funcionario.getSalarioFuncionario() == null || funcionario.getSalarioFuncionario() <= 0){
+            throw new BadRequestException("Salário é obrigatório e deve ser positivo!");
+        }
+
         if(funcionario.getDepartamentoFuncionario() != null && funcionario.getDepartamentoFuncionario().getIdDepartamento() != null){
             Integer idDepto = funcionario.getDepartamentoFuncionario().getIdDepartamento();
             Optional<DepartamentoModel> existingDepart = departamentoRepo.findById(idDepto);
@@ -84,9 +88,9 @@ public class FuncionarioService {
 
         if(updateFuncionario.getDepartamentoFuncionario() != null && updateFuncionario.getDepartamentoFuncionario().getIdDepartamento() != null){
             Integer idDepto = updateFuncionario.getDepartamentoFuncionario().getIdDepartamento();
-            DepartamentoModel deptoValido = departamentoRepo.findById(idDepto)
+            DepartamentoModel existingDepart = departamentoRepo.findById(idDepto)
                     .orElseThrow(() -> new NotFoundException("Departamento informado não existe!"));
-            existing.setDepartamentoFuncionario(deptoValido);
+            existing.setDepartamentoFuncionario(existingDepart);
         }
 
         if(updateFuncionario.getSupervisor() != null && updateFuncionario.getSupervisor().getIdFuncionario() != null){
