@@ -14,7 +14,7 @@ public class DepartamentoModel {
     @Column(name = "id_depto")
     private Integer idDepartamento;
 
-    @Column(name = "nome_depto", length = 50)
+    @Column(name = "nome_depto")
     private String nomeDepartamento;
 
     @OneToMany(mappedBy = "departamentoFuncionario", cascade = CascadeType.DETACH)
