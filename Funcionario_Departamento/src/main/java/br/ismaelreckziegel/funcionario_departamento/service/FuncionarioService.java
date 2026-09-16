@@ -1,5 +1,6 @@
 package br.ismaelreckziegel.funcionario_departamento.service;
 
+import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoDTO;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.BadRequestException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.ConflictException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.NotFoundException;
@@ -72,7 +73,12 @@ public class FuncionarioService {
                 .orElseThrow(() -> new NotFoundException("Funcionário inexistente!"));
     }
 
-    //TODO: criar feature que retorne os projetos que Funcionario está vinculado [tbl_funcionario_projeto]
+    public List<ProjetoDTO> readProjetosFuncionario(Integer id){
+        FuncionarioModel existing = funcionarioRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Funcionário não encontrado!"));
+
+           return existing.getProjetosFuncionario().stream().map(ProjetoDTO::new).toList();
+    }
 
     public FuncionarioModel updateById(Integer id, FuncionarioModel updateFuncionario) {
         FuncionarioModel existing = funcionarioRepo.findById(id)
