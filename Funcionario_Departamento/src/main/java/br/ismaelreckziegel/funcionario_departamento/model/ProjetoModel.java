@@ -1,5 +1,6 @@
 package br.ismaelreckziegel.funcionario_departamento.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -20,10 +21,11 @@ public class ProjetoModel {
     @Column(name = "data_inicio")
     private LocalDate dataInicio;
 
-    @ManyToMany // TODO: tornar esse relacionamento bidirecional para atender a feature de consulta do func>projetos
+    @ManyToMany
     @JoinTable(name = "tbl_funcionario_projeto",
             joinColumns = @JoinColumn(name = "id_projeto"),
             inverseJoinColumns = @JoinColumn(name = "id_func"))
+    @JsonIgnoreProperties("projetosFuncionario")
     private List<FuncionarioModel> equipeProjeto;
 
     public Integer getIdProjeto() {

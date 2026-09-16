@@ -1,6 +1,8 @@
 package br.ismaelreckziegel.funcionario_departamento.controller;
 
+import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoDTO;
 import br.ismaelreckziegel.funcionario_departamento.model.FuncionarioModel;
+import br.ismaelreckziegel.funcionario_departamento.model.ProjetoModel;
 import br.ismaelreckziegel.funcionario_departamento.service.FuncionarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,11 @@ public class FuncionarioController {
     @GetMapping("/funcionario/searchname") // ?name=João
     public ResponseEntity<FuncionarioModel> readByName(@RequestParam String funcionario){
         return ResponseEntity.status(200).body(service.readByName(funcionario));
+    }
+
+    @GetMapping("funcionario/projetos/{id}")
+    public ResponseEntity<List<ProjetoDTO>> readProjetosFuncionario(@PathVariable Integer id){
+        return ResponseEntity.status(200).body(service.readProjetosFuncionario(id));
     }
 
     @PutMapping("/funcionario/update/{id}")

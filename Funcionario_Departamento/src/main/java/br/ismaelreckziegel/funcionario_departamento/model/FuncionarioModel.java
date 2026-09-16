@@ -3,6 +3,8 @@ package br.ismaelreckziegel.funcionario_departamento.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tbl_funcionario")
 public class FuncionarioModel {
@@ -28,7 +30,9 @@ public class FuncionarioModel {
     @JsonIgnoreProperties({"supervisor", "departamentoFuncionario"})
     private FuncionarioModel supervisor;
 
-    // TODO: Adicionar atributo List<ProjetoModel> para consulta de projetos vinculados ao id do funcionário
+    @ManyToMany(mappedBy = "equipeProjeto")
+    @JsonIgnoreProperties("equipeProjeto")
+    private List<ProjetoModel> projetosFuncionario;
 
     public Integer getIdFuncionario() {
         return idFuncionario;
@@ -68,5 +72,13 @@ public class FuncionarioModel {
 
     public void setSupervisor(FuncionarioModel supervisor) {
         this.supervisor = supervisor;
+    }
+
+    public List<ProjetoModel> getProjetosFuncionario() {
+        return projetosFuncionario;
+    }
+
+    public void setProjetosFuncionario(List<ProjetoModel> projetosFuncionario) {
+        this.projetosFuncionario = projetosFuncionario;
     }
 }
