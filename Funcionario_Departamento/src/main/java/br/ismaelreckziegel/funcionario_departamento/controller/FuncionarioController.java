@@ -1,8 +1,8 @@
 package br.ismaelreckziegel.funcionario_departamento.controller;
 
+import br.ismaelreckziegel.funcionario_departamento.dto.funcionario.FuncionarioDTO;
+import br.ismaelreckziegel.funcionario_departamento.dto.funcionario.FuncionarioRequestDTO;
 import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoDTO;
-import br.ismaelreckziegel.funcionario_departamento.model.FuncionarioModel;
-import br.ismaelreckziegel.funcionario_departamento.model.ProjetoModel;
 import br.ismaelreckziegel.funcionario_departamento.service.FuncionarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,36 +19,36 @@ public class FuncionarioController {
     }
 
     @PostMapping("/novofuncionario")
-    public ResponseEntity<FuncionarioModel> create(@RequestBody FuncionarioModel novoFuncionario){
+    public ResponseEntity<FuncionarioDTO> create(@RequestBody FuncionarioRequestDTO novoFuncionario){
         return ResponseEntity.status(201).body(service.create(novoFuncionario));
     }
 
     @GetMapping("/funcionarios")
-    public ResponseEntity<List<FuncionarioModel>> readAll(){
+    public ResponseEntity<List<FuncionarioDTO>> readAll(){
         return ResponseEntity.status(200).body(service.readAll());
     }
 
-    @GetMapping("/funcionario/searchid/{id}")
-    public ResponseEntity<FuncionarioModel> readById(@PathVariable Integer id){
+    @GetMapping("/funcionario/search/{id}")
+    public ResponseEntity<FuncionarioDTO> readById(@PathVariable Integer id){
         return ResponseEntity.status(200).body(service.readById(id));
     }
 
-    @GetMapping("/funcionario/searchname") // ?name=João
-    public ResponseEntity<FuncionarioModel> readByName(@RequestParam String funcionario){
-        return ResponseEntity.status(200).body(service.readByName(funcionario));
+    @GetMapping("/funcionario/search")/*?name="valor"*/
+    public ResponseEntity<FuncionarioDTO> readByName(@RequestParam String name){
+        return ResponseEntity.status(200).body(service.readByName(name));
     }
 
-    @GetMapping("funcionario/projetos/{id}")
+    @GetMapping("/funcionario/{id}/projetos")
     public ResponseEntity<List<ProjetoDTO>> readProjetosFuncionario(@PathVariable Integer id){
         return ResponseEntity.status(200).body(service.readProjetosFuncionario(id));
     }
 
-    @PutMapping("/funcionario/update/{id}")
-    public ResponseEntity<FuncionarioModel> updateFuncionario(@PathVariable Integer id, @RequestBody FuncionarioModel funcionario){
+    @PutMapping("/funcionario/{id}/update")
+    public ResponseEntity<FuncionarioDTO> updateFuncionario(@PathVariable Integer id, @RequestBody FuncionarioRequestDTO funcionario){
         return ResponseEntity.status(204).body(service.updateById(id, funcionario));
     }
 
-    @DeleteMapping("/funcionario/delete/{id}")
+    @DeleteMapping("/funcionario/{id}/delete")
     public ResponseEntity<Void> deleteFuncionario(@PathVariable Integer id){
         service.deleteById(id);
         return ResponseEntity.status(204).build();

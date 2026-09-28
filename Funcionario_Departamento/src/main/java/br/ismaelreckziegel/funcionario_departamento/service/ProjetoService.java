@@ -1,5 +1,9 @@
 package br.ismaelreckziegel.funcionario_departamento.service;
 
+import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoDTO;
+import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoEquipeDTO;
+import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoRequestEquipeDTO;
+import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoRequestDTO;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.BadRequestException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.ConflictException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.NotFoundException;
@@ -23,70 +27,105 @@ public class ProjetoService {
         this.funcionarioRepo = funcionarioRepo;
     }
 
-    public ProjetoModel create(ProjetoModel projeto){
+    public ProjetoDTO create(ProjetoRequestDTO projeto) {
+        ProjetoModel novoProjeto = new ProjetoModel();
 
-        if(projeto.getNomeProjeto() == null || projeto.getNomeProjeto().isBlank()){
+        if (projeto.nome() == null || projeto.nome().isBlank()) {
             throw new BadRequestException("Nome do Projeto é obrigatório!");
         }
 
-        Optional<ProjetoModel> existingNome = projetoRepo.findByNomeProjeto(projeto.getNomeProjeto());
-        if(existingNome.isPresent()){
+        Optional<ProjetoModel> existingNome = projetoRepo.findByNomeProjeto(projeto.nome());
+        if (existingNome.isPresent()) {
             throw new ConflictException("Projeto já criado na base de dados!");
         }
+        novoProjeto.setNomeProjeto(projeto.nome());
 
-        if(projeto.getEquipeProjeto() != null && !projeto.getEquipeProjeto().isEmpty()){
-            for(FuncionarioModel func : projeto.getEquipeProjeto()){
-                if(func.getIdFuncionario() == null || !funcionarioRepo.existsById(func.getIdFuncionario())){
-                   throw new NotFoundException("Funcionario de ID" + func.getIdFuncionario() + "não existe na equipe.");
-                }
-            }
+        if(projeto.data() == null){
+            throw new BadRequestException("Data inicial do projeto obrigatório");
         }
+        novoProjeto.setDataInicio(projeto.data());
 
-        return projetoRepo.save(projeto);
+        ProjetoModel projetoSalvo = projetoRepo.save(novoProjeto);
+
+        return new ProjetoDTO(projetoSalvo);
     }
 
-    public List<ProjetoModel> readAll(){
-        return projetoRepo.findAll();
+    public List<ProjetoDTO> readAll(){
+        List<ProjetoModel> projetos = projetoRepo.findAll();
+
+        return projetos.stream().map(ProjetoDTO::new).toList();
     }
 
-    public ProjetoModel readById(Integer id){
-        return projetoRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
-    }
-
-    public ProjetoModel readByName(String projeto){
-        return projetoRepo.findByNomeProjeto(projeto)
-                .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
-    }
-
-    public ProjetoModel updateById(Integer id, ProjetoModel updateProjeto){
+    public ProjetoEquipeDTO readById(Integer id){
         ProjetoModel existing = projetoRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
 
-        if(updateProjeto.getNomeProjeto() != null && !updateProjeto.getNomeProjeto().isBlank()){
+        return new ProjetoEquipeDTO(existing);
+    }
 
-            Optional<ProjetoModel> existingNome = projetoRepo.findByNomeProjeto(updateProjeto.getNomeProjeto());
+    public ProjetoEquipeDTO readByName(String projeto){
+        ProjetoModel existing = projetoRepo.findByNomeProjeto(projeto)
+                .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
+
+        return new ProjetoEquipeDTO(existing);
+    }
+
+    public ProjetoDTO updateById(Integer id, ProjetoRequestDTO updateProjeto){
+        ProjetoModel existing = projetoRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
+
+        if(updateProjeto.nome() != null && !updateProjeto.nome().isBlank()){
+
+            Optional<ProjetoModel> existingNome = projetoRepo.findByNomeProjeto(updateProjeto.nome());
 
             if(existingNome.isPresent() && !existingNome.get().getIdProjeto().equals(id)){
                 throw new ConflictException("Já existe outro projeto com o nome informado!");
             }
 
-            existing.setNomeProjeto(updateProjeto.getNomeProjeto());
+            existing.setNomeProjeto(updateProjeto.nome());
         }
 
-        if(updateProjeto.getDataInicio() != null){
-            existing.setDataInicio(updateProjeto.getDataInicio());
+        if(updateProjeto.data() != null){
+            existing.setDataInicio(updateProjeto.data());
         }
 
-        return projetoRepo.save(existing);
+        ProjetoModel projetoUpdate = projetoRepo.save(existing);
+
+        return new ProjetoDTO(projetoUpdate);
     }
 
-    //TODO: criar feature para adicionar membro a equipe de um projeto já existente [updateEquipe].
+    public ProjetoDTO updateEquipeById(Integer id, ProjetoRequestEquipeDTO updateEquipeProjeto){
+
+        ProjetoModel existing = projetoRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
+
+        if (updateEquipeProjeto.id() != null && !updateEquipeProjeto.id().isEmpty()) {
+
+            List<Integer> ids = updateEquipeProjeto.id();
+
+            List<FuncionarioModel> funcionariosDoBanco = funcionarioRepo.findAllById(ids);
+
+            if (funcionariosDoBanco.size() != ids.size()) {
+                throw new NotFoundException("Um ou mais funcionários informados para a equipe não foram encontrados!");
+            }
+
+            for (FuncionarioModel novoFuncionario : funcionariosDoBanco) {
+                if (!existing.getEquipeProjeto().contains(novoFuncionario)) {
+                    existing.getEquipeProjeto().add(novoFuncionario);
+                }
+            }
+        }
+
+        ProjetoModel equipeUpdate = projetoRepo.save(existing);
+
+        return new ProjetoDTO(equipeUpdate);
+    }
 
     public void deleteById(Integer id){
         if(!projetoRepo.existsById(id)){
             throw new NotFoundException("Projeto não encontrado!");
         }
+
         projetoRepo.deleteById(id);
     }
 

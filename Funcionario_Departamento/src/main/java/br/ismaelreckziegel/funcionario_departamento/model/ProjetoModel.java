@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,8 +26,7 @@ public class ProjetoModel {
     @JoinTable(name = "tbl_funcionario_projeto",
             joinColumns = @JoinColumn(name = "id_projeto"),
             inverseJoinColumns = @JoinColumn(name = "id_func"))
-    @JsonIgnoreProperties("projetosFuncionario")
-    private List<FuncionarioModel> equipeProjeto;
+    private List<FuncionarioModel> equipeProjeto = new ArrayList<>();
 
     public Integer getIdProjeto() {
         return idProjeto;

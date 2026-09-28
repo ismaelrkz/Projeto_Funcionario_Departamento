@@ -3,6 +3,7 @@ package br.ismaelreckziegel.funcionario_departamento.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,17 +23,15 @@ public class FuncionarioModel {
 
     @ManyToOne
     @JoinColumn(name = "depto_func")
-    @JsonIgnoreProperties("listaFuncionarios")
-    private DepartamentoModel departamentoFuncionario; //relação 1:N
+    private DepartamentoModel departamentoFuncionario;
 
     @ManyToOne
     @JoinColumn(name = "id_supervisor")
-    @JsonIgnoreProperties({"supervisor", "departamentoFuncionario"})
     private FuncionarioModel supervisor;
 
     @ManyToMany(mappedBy = "equipeProjeto")
     @JsonIgnoreProperties("equipeProjeto")
-    private List<ProjetoModel> projetosFuncionario;
+    private List<ProjetoModel> projetosFuncionario = new ArrayList<>();
 
     public Integer getIdFuncionario() {
         return idFuncionario;

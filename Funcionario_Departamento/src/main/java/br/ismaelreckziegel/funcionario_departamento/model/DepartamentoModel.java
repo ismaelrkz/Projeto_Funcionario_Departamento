@@ -3,6 +3,7 @@ package br.ismaelreckziegel.funcionario_departamento.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,9 +18,8 @@ public class DepartamentoModel {
     @Column(name = "nome_depto")
     private String nomeDepartamento;
 
-    @OneToMany(mappedBy = "departamentoFuncionario", cascade = CascadeType.DETACH)
-    @JsonIgnoreProperties("departamentoFuncionario")
-    private List<FuncionarioModel> listaFuncionarios;
+    @OneToMany(mappedBy = "departamentoFuncionario")
+    private List<FuncionarioModel> listaFuncionarios = new ArrayList<>();
 
     public Integer getIdDepartamento() {
         return idDepartamento;

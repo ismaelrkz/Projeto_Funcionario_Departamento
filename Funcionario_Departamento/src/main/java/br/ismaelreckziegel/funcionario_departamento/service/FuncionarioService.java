@@ -1,11 +1,14 @@
 package br.ismaelreckziegel.funcionario_departamento.service;
 
+import br.ismaelreckziegel.funcionario_departamento.dto.funcionario.FuncionarioDTO;
+import br.ismaelreckziegel.funcionario_departamento.dto.funcionario.FuncionarioRequestDTO;
 import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoDTO;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.BadRequestException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.ConflictException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.NotFoundException;
 import br.ismaelreckziegel.funcionario_departamento.model.DepartamentoModel;
 import br.ismaelreckziegel.funcionario_departamento.model.FuncionarioModel;
+import br.ismaelreckziegel.funcionario_departamento.model.ProjetoModel;
 import br.ismaelreckziegel.funcionario_departamento.repo.DepartamentoRepo;
 import br.ismaelreckziegel.funcionario_departamento.repo.FuncionarioRepo;
 
@@ -25,82 +28,93 @@ public class FuncionarioService {
         this.departamentoRepo = departamentoRepo;
     }
 
-    public FuncionarioModel create(FuncionarioModel funcionario){
+    public FuncionarioDTO create(FuncionarioRequestDTO funcionario){
+        FuncionarioModel novoFuncionario = new FuncionarioModel();
 
-        if(funcionario.getNomeFuncionario() == null || funcionario.getNomeFuncionario().isBlank() ){
+        if (funcionario.nomeFuncionario() == null || funcionario.nomeFuncionario().isBlank()) {
             throw new BadRequestException("Nome do funcionário obrigatório!");
         }
 
-        Optional<FuncionarioModel> existingFunc = funcionarioRepo.findByNomeFuncionario(funcionario.getNomeFuncionario());
-        if(existingFunc.isPresent()){ // Funcionário
-            throw new ConflictException("Funcionário já existente");
+        Optional<FuncionarioModel> existingFunc = funcionarioRepo.findByNomeFuncionario(funcionario.nomeFuncionario());
+        if (existingFunc.isPresent()) {
+            throw new ConflictException("Funcionário já existente!");
         }
+        novoFuncionario.setNomeFuncionario(funcionario.nomeFuncionario());
 
-        if(funcionario.getSalarioFuncionario() == null || funcionario.getSalarioFuncionario() <= 0){
+        if (funcionario.salarioFuncionario() == null || funcionario.salarioFuncionario() <= 0) {
             throw new BadRequestException("Salário é obrigatório e deve ser positivo!");
         }
+        novoFuncionario.setSalarioFuncionario(funcionario.salarioFuncionario());
 
-        if(funcionario.getDepartamentoFuncionario() != null && funcionario.getDepartamentoFuncionario().getIdDepartamento() != null){
-            Integer idDepto = funcionario.getDepartamentoFuncionario().getIdDepartamento();
-            Optional<DepartamentoModel> existingDepart = departamentoRepo.findById(idDepto);
-            if(existingDepart.isEmpty()){ //Departamento
-                throw new NotFoundException("Departamento informado não existe!");
-            }
+        if (funcionario.departamentoFuncionario() != null) {
+            DepartamentoModel existing = departamentoRepo.findById(funcionario.departamentoFuncionario())
+                    .orElseThrow(() -> new NotFoundException("Departamento não encontrado!"));
+
+            novoFuncionario.setDepartamentoFuncionario(existing);
         }
 
-        if(funcionario.getSupervisor() != null && funcionario.getSupervisor().getIdFuncionario() != null){
-            Integer idSup = funcionario.getSupervisor().getIdFuncionario();
-            Optional<FuncionarioModel> existingSup = funcionarioRepo.findById(idSup);
-            if(existingSup.isEmpty()){ // Supervisor
-                throw new NotFoundException("Supervisor informado não existe!");
-            }
+        if (funcionario.supervisor() != null) {
+            FuncionarioModel existing = funcionarioRepo.findById(funcionario.supervisor())
+                    .orElseThrow(() -> new NotFoundException("Supervisor não encontrado!"));
+
+            novoFuncionario.setSupervisor(existing);
         }
 
-        return funcionarioRepo.save(funcionario);
+        FuncionarioModel salvo = funcionarioRepo.save(novoFuncionario);
+
+        return new FuncionarioDTO(salvo);
     }
 
-    public List<FuncionarioModel> readAll(){
-        return funcionarioRepo.findAll();
+    public List<FuncionarioDTO> readAll(){
+        List<FuncionarioModel> funcionarios = funcionarioRepo.findAll();
+
+        return funcionarios.stream().map(FuncionarioDTO::new).toList();
     }
 
-    public FuncionarioModel readById(Integer id){
-        return funcionarioRepo.findById(id)
+    public FuncionarioDTO readById(Integer id){
+        FuncionarioModel existing = funcionarioRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Funcionario inexistente!"));
+
+        return new FuncionarioDTO(existing);
     }
 
-    public FuncionarioModel readByName(String funcionario){
-        return funcionarioRepo.findByNomeFuncionario(funcionario)
-                .orElseThrow(() -> new NotFoundException("Funcionário inexistente!"));
+    public FuncionarioDTO readByName(String name){
+        FuncionarioModel existing = funcionarioRepo.findByNomeFuncionario(name)
+                .orElseThrow(() -> new NotFoundException("Funcionário não encontrado!"));
+
+        return new FuncionarioDTO(existing);
     }
 
     public List<ProjetoDTO> readProjetosFuncionario(Integer id){
         FuncionarioModel existing = funcionarioRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Funcionário não encontrado!"));
 
-           return existing.getProjetosFuncionario().stream().map(ProjetoDTO::new).toList();
+        List<ProjetoModel> projetos = existing.getProjetosFuncionario();
+
+        return projetos.stream().map(ProjetoDTO::new).toList();
     }
 
-    public FuncionarioModel updateById(Integer id, FuncionarioModel updateFuncionario) {
+    public FuncionarioDTO updateById(Integer id, FuncionarioRequestDTO updateFuncionario){
         FuncionarioModel existing = funcionarioRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Funcionário não encontrado!"));
 
-        if(updateFuncionario.getNomeFuncionario() != null && !updateFuncionario.getNomeFuncionario().isBlank()){
-            existing.setNomeFuncionario(updateFuncionario.getNomeFuncionario());
+        if(updateFuncionario.nomeFuncionario() != null && !updateFuncionario.nomeFuncionario().isBlank()){
+            existing.setNomeFuncionario(updateFuncionario.nomeFuncionario());
         }
 
-        if(updateFuncionario.getSalarioFuncionario() != null && updateFuncionario.getSalarioFuncionario() > 0){
-            existing.setSalarioFuncionario(updateFuncionario.getSalarioFuncionario());
+        if(updateFuncionario.salarioFuncionario() != null && updateFuncionario.salarioFuncionario() > 0){
+            existing.setSalarioFuncionario(updateFuncionario.salarioFuncionario());
         }
 
-        if(updateFuncionario.getDepartamentoFuncionario() != null && updateFuncionario.getDepartamentoFuncionario().getIdDepartamento() != null){
-            Integer idDepto = updateFuncionario.getDepartamentoFuncionario().getIdDepartamento();
+        if(updateFuncionario.departamentoFuncionario() != null){
+            Integer idDepto = updateFuncionario.departamentoFuncionario();
             DepartamentoModel existingDepart = departamentoRepo.findById(idDepto)
                     .orElseThrow(() -> new NotFoundException("Departamento informado não existe!"));
             existing.setDepartamentoFuncionario(existingDepart);
         }
 
-        if(updateFuncionario.getSupervisor() != null && updateFuncionario.getSupervisor().getIdFuncionario() != null){
-            Integer idSup = updateFuncionario.getSupervisor().getIdFuncionario();
+        if(updateFuncionario.supervisor() != null){
+            Integer idSup = updateFuncionario.supervisor();
             if(idSup.equals(id)){
                 throw new ConflictException("Um funcionário não pode ser supervisor de si mesmo!");
             }
@@ -109,7 +123,9 @@ public class FuncionarioService {
             existing.setSupervisor(supValido);
         }
 
-        return funcionarioRepo.save(existing);
+        FuncionarioModel funcionarioUpdate = funcionarioRepo.save(existing);
+
+        return new FuncionarioDTO(funcionarioUpdate);
     }
 
     public void deleteById(Integer id){
