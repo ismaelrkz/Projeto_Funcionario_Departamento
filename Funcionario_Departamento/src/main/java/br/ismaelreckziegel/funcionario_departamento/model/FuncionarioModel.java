@@ -1,6 +1,5 @@
 package br.ismaelreckziegel.funcionario_departamento.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ public class FuncionarioModel {
     private FuncionarioModel supervisor;
 
     @ManyToMany(mappedBy = "equipeProjeto")
-    @JsonIgnoreProperties("equipeProjeto")
     private List<ProjetoModel> projetosFuncionario = new ArrayList<>();
 
     public Integer getIdFuncionario() {

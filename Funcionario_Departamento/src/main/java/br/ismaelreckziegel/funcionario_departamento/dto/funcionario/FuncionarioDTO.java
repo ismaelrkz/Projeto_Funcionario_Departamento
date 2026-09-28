@@ -14,8 +14,10 @@ public record FuncionarioDTO(
                 model.getIdFuncionario(),
                 model.getNomeFuncionario(),
                 model.getSalarioFuncionario(),
-                model.getDepartamentoFuncionario() != null ? model.getDepartamentoFuncionario().getNomeDepartamento() : null,
-                model.getSupervisor() != null ? model.getSupervisor().getNomeFuncionario() : null
+                model.getDepartamentoFuncionario() != null //TODO: estudar estrutura
+                        ? model.getDepartamentoFuncionario().getNomeDepartamento() : null,
+                model.getSupervisor() != null //TODO: estudar estrutura
+                        ? model.getSupervisor().getNomeFuncionario() : null
         );
     }
 }

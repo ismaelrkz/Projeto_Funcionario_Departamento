@@ -14,7 +14,7 @@ public record DepartamentoDTO(Integer idDepartamento,
                 departamento.getNomeDepartamento(),
                 departamento.getListaFuncionarios() != null
                         ? departamento.getListaFuncionarios().stream().map(FuncionarioSimplesDTO::new).toList()
-                        : List.of() //TODO: estudar estrutura [departamento.getListaFuncionarios() != null...]
+                        : List.of() //TODO: estudar estrutura
         );
     }
 }

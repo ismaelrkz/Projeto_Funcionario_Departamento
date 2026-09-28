@@ -94,7 +94,7 @@ public class ProjetoService {
         return new ProjetoDTO(projetoUpdate);
     }
 
-    public ProjetoDTO updateEquipeById(Integer id, ProjetoRequestEquipeDTO updateEquipeProjeto){
+    public ProjetoEquipeDTO updateEquipeById(Integer id, ProjetoRequestEquipeDTO updateEquipeProjeto){
 
         ProjetoModel existing = projetoRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
@@ -109,16 +109,16 @@ public class ProjetoService {
                 throw new NotFoundException("Um ou mais funcionários informados para a equipe não foram encontrados!");
             }
 
-            for (FuncionarioModel novoFuncionario : funcionariosDoBanco) {
-                if (!existing.getEquipeProjeto().contains(novoFuncionario)) {
-                    existing.getEquipeProjeto().add(novoFuncionario);
-                }
+            if(funcionariosDoBanco.stream().anyMatch(existing.getEquipeProjeto()::contains)){
+                throw new ConflictException("Um ou mais funcionários informados já estão na equipe!");
             }
+
+            existing.getEquipeProjeto().addAll(funcionariosDoBanco);
         }
 
         ProjetoModel equipeUpdate = projetoRepo.save(existing);
 
-        return new ProjetoDTO(equipeUpdate);
+        return new ProjetoEquipeDTO(equipeUpdate);
     }
 
     public void deleteById(Integer id){
