@@ -1,5 +1,8 @@
 package br.ismaelreckziegel.funcionario_departamento.service;
 
+import br.ismaelreckziegel.funcionario_departamento.dto.departamento.DepartamentoDTO;
+import br.ismaelreckziegel.funcionario_departamento.dto.departamento.DepartamentoRequestDTO;
+import br.ismaelreckziegel.funcionario_departamento.dto.funcionario.FuncionarioSimplesDTO;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.BadRequestException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.ConflictException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.NotFoundException;
@@ -19,46 +22,63 @@ public class DepartamentoService {
         this.departamentoRepo = departamentoRepo;
     }
 
-    public DepartamentoModel create(DepartamentoModel departamento){
-        if(departamento.getNomeDepartamento() == null || departamento.getNomeDepartamento().isBlank()){
+    public DepartamentoDTO create(DepartamentoRequestDTO departamento){
+        DepartamentoModel novoDepartamento = new DepartamentoModel();
+
+        if(departamento.nomeDepartamento() == null || departamento.nomeDepartamento().isBlank()){
             throw new BadRequestException("Nome do Departamento é obrigatório!");
         }
 
-        Optional<DepartamentoModel> existing = departamentoRepo.findByNomeDepartamento(departamento.getNomeDepartamento());
+        Optional<DepartamentoModel> existing = departamentoRepo.findByNomeDepartamento(departamento.nomeDepartamento());
         if (existing.isPresent()){
             throw new ConflictException("Departamento já existente!");
-        }
-        return departamentoRepo.save(departamento);
+        };
+
+        novoDepartamento.setNomeDepartamento(departamento.nomeDepartamento());
+
+        DepartamentoModel departamentoSalvo = departamentoRepo.save(novoDepartamento);
+
+        return new DepartamentoDTO(departamentoSalvo);
     }
 
-    public List<DepartamentoModel> readAll(){
-        return departamentoRepo.findAll();
+    public List<DepartamentoDTO> readAll(){
+        List<DepartamentoModel> departamentos = departamentoRepo.findAll();
+
+        return departamentos.stream().map(DepartamentoDTO::new).toList();
     }
 
-    public DepartamentoModel readById(Integer id){
-        return departamentoRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("ID departamento inexistente!"));
+    public DepartamentoDTO readById(Integer id){
+        return departamentoRepo.findById(id).map(DepartamentoDTO::new)
+                .orElseThrow(() -> new NotFoundException("Departamento não encontrado!"));
     }
 
-    public DepartamentoModel readByName(String name){
-        return departamentoRepo.findByNomeDepartamento(name)
-                .orElseThrow(() -> new NotFoundException("Departamento inexistente!"));
+    public DepartamentoDTO readByName(String name){
+        return departamentoRepo.findByNomeDepartamento(name).map(DepartamentoDTO::new)
+                .orElseThrow(() -> new NotFoundException("Departamento não encontrado!"));
     }
 
-    public DepartamentoModel updateById(Integer id, DepartamentoModel updateDepartamento){
+    public List<FuncionarioSimplesDTO> readFuncionariosDepartamento(Integer id){
+        DepartamentoModel existing = departamentoRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Departamento não encontrado!"));
+
+        return existing.getListaFuncionarios().stream().map(FuncionarioSimplesDTO::new).toList();
+    }
+
+    public DepartamentoDTO updateById(Integer id, DepartamentoRequestDTO updateDepartamento){
         DepartamentoModel existing = departamentoRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("ID departamento inexistente!"));
 
-        if(updateDepartamento.getNomeDepartamento() != null && !updateDepartamento.getNomeDepartamento().isBlank()){
-            Optional<DepartamentoModel> existingNome = departamentoRepo.findByNomeDepartamento(updateDepartamento.getNomeDepartamento());
+        if(updateDepartamento.nomeDepartamento() != null && !updateDepartamento.nomeDepartamento().isBlank()){
+            Optional<DepartamentoModel> existingNome = departamentoRepo.findByNomeDepartamento(updateDepartamento.nomeDepartamento());
 
-            if(existingNome.isPresent() && existingNome.get().getIdDepartamento().equals(id)){
+            if(existingNome.isPresent() && !existingNome.get().getIdDepartamento().equals(id)){
                 throw new ConflictException("Já existe um Departamento com o nome informado");
             }
-            existing.setNomeDepartamento(updateDepartamento.getNomeDepartamento());
+            existing.setNomeDepartamento(updateDepartamento.nomeDepartamento());
         }
 
-        return departamentoRepo.save(existing);
+        DepartamentoModel departamentoSalvo = departamentoRepo.save(existing);
+        return new DepartamentoDTO(departamentoSalvo);
     }
 
     public void deleteById(Integer id){
