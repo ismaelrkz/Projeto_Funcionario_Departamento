@@ -45,7 +45,7 @@ public class ProjetoController {
     }
 
     @PutMapping("/projeto/{id}/update/equipe")
-    public ResponseEntity<ProjetoDTO> updateEquipe(@PathVariable Integer id, @RequestBody ProjetoRequestEquipeDTO projeto){
+    public ResponseEntity<ProjetoEquipeDTO> updateEquipe(@PathVariable Integer id, @RequestBody ProjetoRequestEquipeDTO projeto){
         return ResponseEntity.status(200).body(service.updateEquipeById(id, projeto));
     }
 
