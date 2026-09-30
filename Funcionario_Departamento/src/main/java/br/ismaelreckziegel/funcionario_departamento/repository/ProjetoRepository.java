@@ -1,4 +1,4 @@
-package br.ismaelreckziegel.funcionario_departamento.repo;
+package br.ismaelreckziegel.funcionario_departamento.repository;
 
 import br.ismaelreckziegel.funcionario_departamento.model.ProjetoModel;
 import org.springframework.data.jpa.repository.Query;
@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface ProjetoRepo extends ListCrudRepository<ProjetoModel, Integer> {
+public interface ProjetoRepository extends ListCrudRepository<ProjetoModel, Integer> {
 
     @Query("""
         SELECT d FROM ProjetoModel d 
@@ -15,5 +15,4 @@ public interface ProjetoRepo extends ListCrudRepository<ProjetoModel, Integer> {
         LIKE LOWER(CONCAT('%', REPLACE(:projeto, ' ', ''), '%'))
     """)
     public Optional<ProjetoModel> findByNomeProjeto(@Param("projeto") String projeto);
-
 }
