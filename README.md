@@ -1,1 +1,1 @@
-# README (projeto em construção...)
+# README (projeto concluído, documentação em desenvolvimento...)
