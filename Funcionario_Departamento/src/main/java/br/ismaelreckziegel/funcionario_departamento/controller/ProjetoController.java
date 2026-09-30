@@ -2,7 +2,7 @@ package br.ismaelreckziegel.funcionario_departamento.controller;
 
 import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoDTO;
 import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoEquipeDTO;
-import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoRequestEquipeDTO;
+import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoEquipeRequestDTO;
 import br.ismaelreckziegel.funcionario_departamento.dto.projeto.ProjetoRequestDTO;
 import br.ismaelreckziegel.funcionario_departamento.service.ProjetoService;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ public class ProjetoController {
     }
 
     @PutMapping("/projeto/{id}/update/equipe")
-    public ResponseEntity<ProjetoEquipeDTO> updateEquipe(@PathVariable Integer id, @RequestBody ProjetoRequestEquipeDTO projeto){
+    public ResponseEntity<ProjetoEquipeDTO> updateEquipe(@PathVariable Integer id, @RequestBody ProjetoEquipeRequestDTO projeto){
         return ResponseEntity.status(200).body(service.updateEquipeById(id, projeto));
     }
 

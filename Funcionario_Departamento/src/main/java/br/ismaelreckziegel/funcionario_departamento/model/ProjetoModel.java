@@ -1,6 +1,5 @@
 package br.ismaelreckziegel.funcionario_departamento.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
