@@ -35,7 +35,7 @@ public class FuncionarioService {
             throw new BadRequestException("Nome do funcionário obrigatório!");
         }
 
-        Optional<FuncionarioModel> existingFunc = funcionarioRepository.findByNomeFuncionario(funcionario.nomeFuncionario());
+        Optional<FuncionarioModel> existingFunc = funcionarioRepository.findByNomeFuncionarioContaining(funcionario.nomeFuncionario());
         if (existingFunc.isPresent()) {
             throw new ConflictException("Funcionário já existente!");
         }
@@ -79,7 +79,7 @@ public class FuncionarioService {
     }
 
     public FuncionarioDTO readByName(String name){
-        FuncionarioModel existing = funcionarioRepository.findByNomeFuncionario(name)
+        FuncionarioModel existing = funcionarioRepository.findByNomeFuncionarioContaining(name)
                 .orElseThrow(() -> new NotFoundException("Funcionário não encontrado!"));
 
         return new FuncionarioDTO(existing);

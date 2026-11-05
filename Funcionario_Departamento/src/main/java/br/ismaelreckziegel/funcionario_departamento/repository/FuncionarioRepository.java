@@ -14,5 +14,5 @@ public interface FuncionarioRepository extends ListCrudRepository<FuncionarioMod
         WHERE REPLACE(LOWER(d.nomeFuncionario), ' ', '') 
         LIKE LOWER(CONCAT('%', REPLACE(:funcionario, ' ', ''), '%'))
     """)
-    public Optional<FuncionarioModel> findByNomeFuncionario(@Param("funcionario") String funcionario);
+    public Optional<FuncionarioModel> findByNomeFuncionarioContaining(@Param("funcionario") String funcionario);
 }

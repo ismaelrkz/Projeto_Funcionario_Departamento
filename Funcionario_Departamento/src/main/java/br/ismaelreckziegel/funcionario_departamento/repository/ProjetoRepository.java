@@ -14,5 +14,5 @@ public interface ProjetoRepository extends ListCrudRepository<ProjetoModel, Inte
         WHERE REPLACE(LOWER(d.nomeProjeto), ' ', '') 
         LIKE LOWER(CONCAT('%', REPLACE(:projeto, ' ', ''), '%'))
     """)
-    public Optional<ProjetoModel> findByNomeProjeto(@Param("projeto") String projeto);
+    public Optional<ProjetoModel> findByNomeProjetoContaining(@Param("projeto") String projeto);
 }

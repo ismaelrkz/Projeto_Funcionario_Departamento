@@ -28,12 +28,12 @@ public class DepartamentoController {
         return ResponseEntity.status(200).body(service.readAll());
     }
 
-    @GetMapping("/departamentos/search/{id}")
+    @GetMapping("/departamentos/{id}")
     public ResponseEntity<DepartamentoDTO> readDepartamento(@PathVariable Integer id){
         return ResponseEntity.status(200).body(service.readById(id));
     }
     @GetMapping("/departamentos/search")/*?departamento="valor"*/
-    public ResponseEntity<DepartamentoDTO> readDepartamento(@RequestParam String departamento){
+    public ResponseEntity<List<DepartamentoDTO>> readDepartamento(@RequestParam String departamento){
         return ResponseEntity.status(200).body(service.readByName(departamento));
     }
     @GetMapping("/departamentos/{id}/funcionarios")
@@ -41,12 +41,12 @@ public class DepartamentoController {
         return ResponseEntity.status(200).body(service.readFuncionariosDepartamento(id));
     }
 
-    @PutMapping("/departamentos/update/{id}")
+    @PutMapping("/departamentos/{id}")
     public ResponseEntity<DepartamentoDTO> updateDepartamento(@PathVariable Integer id, @RequestBody DepartamentoRequestDTO departamento){
         return ResponseEntity.status(200).body(service.updateById(id, departamento));
     }
 
-    @DeleteMapping("/departamentos/delete/{id}")
+    @DeleteMapping("/departamentos/{id}")
     public ResponseEntity<Void> deleteDepartamento(@PathVariable Integer id){
         service.deleteById(id);
         return ResponseEntity.status(204).build();
