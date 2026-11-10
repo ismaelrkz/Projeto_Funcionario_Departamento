@@ -18,37 +18,37 @@ public class FuncionarioController {
         this.service = service;
     }
 
-    @PostMapping("/novofuncionario")
-    public ResponseEntity<FuncionarioDTO> create(@RequestBody FuncionarioRequestDTO novoFuncionario){
+    @PostMapping("/funcionarios")
+    public ResponseEntity<FuncionarioDTO> createFuncionario(@RequestBody FuncionarioRequestDTO novoFuncionario){
         return ResponseEntity.status(201).body(service.create(novoFuncionario));
     }
 
     @GetMapping("/funcionarios")
-    public ResponseEntity<List<FuncionarioDTO>> readAll(){
+    public ResponseEntity<List<FuncionarioDTO>> readAllFuncionarios(){
         return ResponseEntity.status(200).body(service.readAll());
     }
 
-    @GetMapping("/funcionario/search/{id}")
-    public ResponseEntity<FuncionarioDTO> readById(@PathVariable Integer id){
+    @GetMapping("/funcionarios/{id}")
+    public ResponseEntity<FuncionarioDTO> readFuncionario(@PathVariable Integer id){
         return ResponseEntity.status(200).body(service.readById(id));
     }
 
-    @GetMapping("/funcionario/search")/*?name="valor"*/
-    public ResponseEntity<FuncionarioDTO> readByName(@RequestParam String name){
-        return ResponseEntity.status(200).body(service.readByName(name));
+    @GetMapping("/funcionarios/search")/*?name="valor"*/
+    public ResponseEntity<List<FuncionarioDTO>> readFuncionario(@RequestParam String funcionario){
+        return ResponseEntity.status(200).body(service.readByName(funcionario));
     }
 
-    @GetMapping("/funcionario/{id}/projetos")
+    @GetMapping("/funcionarios/{id}/projetos")
     public ResponseEntity<List<ProjetoDTO>> readProjetosFuncionario(@PathVariable Integer id){
         return ResponseEntity.status(200).body(service.readProjetosFuncionario(id));
     }
 
-    @PutMapping("/funcionario/{id}/update")
+    @PutMapping("/funcionario/{id}")
     public ResponseEntity<FuncionarioDTO> updateFuncionario(@PathVariable Integer id, @RequestBody FuncionarioRequestDTO funcionario){
         return ResponseEntity.status(204).body(service.updateById(id, funcionario));
     }
 
-    @DeleteMapping("/funcionario/{id}/delete")
+    @DeleteMapping("/funcionario/{id}")
     public ResponseEntity<Void> deleteFuncionario(@PathVariable Integer id){
         service.deleteById(id);
         return ResponseEntity.status(204).build();
