@@ -19,37 +19,37 @@ public class ProjetoController {
         this.service = service;
     }
 
-    @PostMapping("/novoprojeto")
-    public ResponseEntity<ProjetoDTO> create(@RequestBody ProjetoRequestDTO novoProjeto){
+    @PostMapping("/projetos")
+    public ResponseEntity<ProjetoDTO> createProjeto(@RequestBody ProjetoRequestDTO novoProjeto){
         return ResponseEntity.status(201).body(service.create(novoProjeto));
     }
 
-    @GetMapping("/projeto/search")
-    public ResponseEntity<List<ProjetoDTO>> readAll(){
+    @GetMapping("/projetos")
+    public ResponseEntity<List<ProjetoDTO>> readAllProjetos(){
         return ResponseEntity.status(200).body(service.readAll());
     }
 
-    @GetMapping("/projeto/search/{id}")
-    public ResponseEntity<ProjetoEquipeDTO> readById(@PathVariable Integer id){
+    @GetMapping("/projetos/{id}")
+    public ResponseEntity<ProjetoEquipeDTO> readProjetos(@PathVariable Integer id){
         return ResponseEntity.status(200).body(service.readById(id));
     }
 
-    @GetMapping("/projeto/searchname")/*?projeto=ERP*/
-    public ResponseEntity<ProjetoEquipeDTO> readByName(@RequestParam String projeto){
-        return ResponseEntity.status(200).body(service.readByName(projeto));
+    @GetMapping("/projetos/search")/*?projeto="valor"*/
+    public ResponseEntity<List<ProjetoEquipeDTO>> readProjetos(@RequestParam String projeto){
+        return ResponseEntity.status(200).body(service.readByName(projeto)); //TODO: atenção nesse teste...!!!
     }
 
-    @PutMapping("/projeto/{id}/update")
+    @PutMapping("/projetos/{id}")
     public ResponseEntity<ProjetoDTO> updateProjeto(@PathVariable Integer id, @RequestBody ProjetoRequestDTO projeto){
         return ResponseEntity.status(200).body(service.updateById(id, projeto));
     }
 
-    @PutMapping("/projeto/{id}/update/equipe")
+    @PutMapping("/projetos/equipe/{id}")
     public ResponseEntity<ProjetoEquipeDTO> updateEquipe(@PathVariable Integer id, @RequestBody ProjetoEquipeRequestDTO projeto){
         return ResponseEntity.status(200).body(service.updateEquipeById(id, projeto));
     }
 
-    @DeleteMapping("/projeto/delete/{id}")
+    @DeleteMapping("/projetos/{id}")
     public ResponseEntity<Void> deleteProjeto(@PathVariable Integer id){
         service.deleteById(id);
         return ResponseEntity.status(204).build();

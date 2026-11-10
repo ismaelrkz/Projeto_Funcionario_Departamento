@@ -14,7 +14,7 @@ public interface DepartamentoRepository extends ListCrudRepository<DepartamentoM
         WHERE REPLACE(LOWER(d.nomeDepartamento), ' ', '') 
         LIKE LOWER(CONCAT('%', REPLACE(:departamento, ' ', ''), '%'))
     """)
-    public List<DepartamentoModel> findByNomeDepartamentoContaining(@Param("departamento") String departamento);
+    public List<DepartamentoModel> findByNomeDepartamentoContaining(@Param("departamento") String nomeDepartamento);
 
     @Query("""
         SELECT CASE WHEN COUNT(d) > 0 THEN true ELSE false END
