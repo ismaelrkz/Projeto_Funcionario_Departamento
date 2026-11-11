@@ -36,7 +36,7 @@ public class ProjetoController {
 
     @GetMapping("/projetos/search")/*?projeto="valor"*/
     public ResponseEntity<List<ProjetoEquipeDTO>> readProjetos(@RequestParam String projeto){
-        return ResponseEntity.status(200).body(service.readByName(projeto)); //TODO: atenção nesse teste...!!!
+        return ResponseEntity.status(200).body(service.readByName(projeto));
     }
 
     @PutMapping("/projetos/{id}")

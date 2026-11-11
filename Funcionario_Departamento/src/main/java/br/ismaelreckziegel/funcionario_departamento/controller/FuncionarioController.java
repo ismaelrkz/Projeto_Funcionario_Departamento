@@ -43,12 +43,12 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(service.readProjetosFuncionario(id));
     }
 
-    @PutMapping("/funcionario/{id}")
+    @PutMapping("/funcionarios/{id}")
     public ResponseEntity<FuncionarioDTO> updateFuncionario(@PathVariable Integer id, @RequestBody FuncionarioRequestDTO funcionario){
-        return ResponseEntity.status(204).body(service.updateById(id, funcionario));
+        return ResponseEntity.status(200).body(service.updateById(id, funcionario));
     }
 
-    @DeleteMapping("/funcionario/{id}")
+    @DeleteMapping("/funcionarios/{id}")
     public ResponseEntity<Void> deleteFuncionario(@PathVariable Integer id){
         service.deleteById(id);
         return ResponseEntity.status(204).build();

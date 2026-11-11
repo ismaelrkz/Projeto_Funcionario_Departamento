@@ -1,13 +1,11 @@
 package br.ismaelreckziegel.funcionario_departamento.repository;
 
-import br.ismaelreckziegel.funcionario_departamento.model.DepartamentoModel;
 import br.ismaelreckziegel.funcionario_departamento.model.ProjetoModel;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProjetoRepository extends ListCrudRepository<ProjetoModel, Integer> {
 

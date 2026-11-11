@@ -6,7 +6,6 @@ import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface FuncionarioRepository extends ListCrudRepository<FuncionarioModel, Integer> {
 
