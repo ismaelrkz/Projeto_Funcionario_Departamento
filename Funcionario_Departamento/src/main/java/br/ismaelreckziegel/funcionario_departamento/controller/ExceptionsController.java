@@ -4,6 +4,7 @@ import br.ismaelreckziegel.funcionario_departamento.exceptions.BadRequestExcepti
 import br.ismaelreckziegel.funcionario_departamento.exceptions.ConflictException;
 import br.ismaelreckziegel.funcionario_departamento.exceptions.NotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -23,6 +24,12 @@ public class ExceptionsController {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFound(NotFoundException ex){
         return ResponseEntity.status(404).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        ex.printStackTrace();
+        return ResponseEntity.badRequest().body("Formato de dado inválido.");
     }
 
     @ExceptionHandler(Exception.class)
