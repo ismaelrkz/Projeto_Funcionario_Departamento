@@ -1,8 +1,10 @@
 # Projeto Funcionário & Departamento: API RESTful com Spring Boot e Spring Data JPA
 
-Este repositório apresenta a implementação de uma **API RESTful** desenvolvida em **Java** com **Spring Boot**, voltada ao gerenciamento de **Departamentos**, **Funcionários** e **Projetos**, incluindo o relacionamento entre essas entidades.
+API REST desenvolvida com Java e Spring Boot para gerenciar departamentos, funcionários e projetos, incluindo os relacionamentos entre essas entidades. Atualmente, oferece operações de cadastro, consulta, atualização e exclusão, além de buscas e operações para consultar relações entre funcionários, departamentos e projetos.
 
-O projeto aplica uma arquitetura em camadas com separação de responsabilidades, mapeamento objeto-relacional (ORM) de relacionamentos **Um-para-Muitos (1:N)** e **Muitos-para-Muitos (M:N)**, consultas personalizadas com JPQL, DTOs para transferência de dados e tratamento global de exceções. A persistência é realizada em banco de dados relacional **MySQL**, utilizando Spring Data JPA e Hibernate.
+A aplicação utiliza arquitetura em camadas: controllers recebem as requisições HTTP, services aplicam as regras de negócio e repositories acessam os dados persistidos no MySQL por meio do Spring Data JPA. Entidades JPA representam os dados persistidos, DTOs definem as informações recebidas e retornadas pela API, e exceções personalizadas tratam erros previstos, como dados inválidos, conflitos e recursos não encontrados.
+
+O projeto está em desenvolvimento e faz parte do meu portfólio de estudos em desenvolvimento backend com Java e Spring Boot. Como próximos passos, planejo ampliar os testes automatizados, evoluir a modelagem e versionar as alterações do banco com migrations, preparar a execução com Docker e estudar autenticação e autorização. Um frontend para consumir a API poderá ser desenvolvido em uma etapa posterior.
 
 ---
 
