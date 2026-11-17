@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface FuncionarioRepository extends ListCrudRepository<FuncionarioModel, Integer> {
 
@@ -14,5 +14,26 @@ public interface FuncionarioRepository extends ListCrudRepository<FuncionarioMod
         WHERE REPLACE(LOWER(d.nomeFuncionario), ' ', '') 
         LIKE LOWER(CONCAT('%', REPLACE(:funcionario, ' ', ''), '%'))
     """)
-    public Optional<FuncionarioModel> findByNomeFuncionario(@Param("funcionario") String funcionario);
+    public List<FuncionarioModel> findByNomeFuncionarioContaining(@Param("funcionario") String nomeFuncionario);
+
+    @Query("""
+        SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END
+        FROM FuncionarioModel f
+        WHERE REPLACE(LOWER(f.nomeFuncionario), ' ', '')
+            = REPLACE(LOWER(:funcionario), ' ', '')
+""")
+    boolean existsByNomeFuncionario(@Param("funcionario") String nomeFuncionario);
+
+    @Query("""
+        SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END
+        FROM FuncionarioModel f
+        WHERE REPLACE(LOWER(f.nomeFuncionario), ' ', '')
+            = REPLACE(LOWER(:funcionario), ' ', '')
+        AND f.idFuncionario <> :id
+""")
+    boolean existsByNomeFuncionarioAndIdFuncionarioNot(
+            @Param("funcionario") String nomeFuncionario,
+            @Param("id") Integer idFuncionario
+    );
+
 }

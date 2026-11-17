@@ -34,8 +34,7 @@ public class ProjetoService {
             throw new BadRequestException("Nome do Projeto é obrigatório!");
         }
 
-        Optional<ProjetoModel> existingNome = projetoRepository.findByNomeProjeto(projeto.nome());
-        if (existingNome.isPresent()) {
+        if (projetoRepository.existsByNomeProjeto(projeto.nome())) {
             throw new ConflictException("Projeto já criado na base de dados!");
         }
         novoProjeto.setNomeProjeto(projeto.nome());
@@ -63,11 +62,14 @@ public class ProjetoService {
         return new ProjetoEquipeDTO(existing);
     }
 
-    public ProjetoEquipeDTO readByName(String projeto){
-        ProjetoModel existing = projetoRepository.findByNomeProjeto(projeto)
-                .orElseThrow(() -> new NotFoundException("Projeto não encontrado!"));
+    public List<ProjetoEquipeDTO> readByName(String projeto){
+        List<ProjetoModel> existing = projetoRepository.findByNomeProjetoContaining(projeto);
 
-        return new ProjetoEquipeDTO(existing);
+        if(existing.isEmpty()){
+         throw new NotFoundException("Projeto não encontrado!");
+        }
+
+        return existing.stream().map(ProjetoEquipeDTO::new).toList();
     }
 
     public ProjetoDTO updateById(Integer id, ProjetoRequestDTO updateProjeto){
@@ -76,9 +78,7 @@ public class ProjetoService {
 
         if(updateProjeto.nome() != null && !updateProjeto.nome().isBlank()){
 
-            Optional<ProjetoModel> existingNome = projetoRepository.findByNomeProjeto(updateProjeto.nome());
-
-            if(existingNome.isPresent() && !existingNome.get().getIdProjeto().equals(id)){
+            if(projetoRepository.existsByNomeProjetoAndIdProjetoNot(updateProjeto.nome(), id)){
                 throw new ConflictException("Já existe outro projeto com o nome informado!");
             }
 

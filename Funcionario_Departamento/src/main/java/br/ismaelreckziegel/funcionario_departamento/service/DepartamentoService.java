@@ -29,10 +29,9 @@ public class DepartamentoService {
             throw new BadRequestException("Nome do Departamento é obrigatório!");
         }
 
-        Optional<DepartamentoModel> existing = departamentoRepository.findByNomeDepartamento(departamento.nomeDepartamento());
-        if (existing.isPresent()){
+        if(departamentoRepository.existsByNomeDepartamento(departamento.nomeDepartamento())){
             throw new ConflictException("Departamento já existente!");
-        };
+        }
 
         novoDepartamento.setNomeDepartamento(departamento.nomeDepartamento());
 
@@ -52,9 +51,14 @@ public class DepartamentoService {
                 .orElseThrow(() -> new NotFoundException("Departamento não encontrado!"));
     }
 
-    public DepartamentoDTO readByName(String name){
-        return departamentoRepository.findByNomeDepartamento(name).map(DepartamentoDTO::new)
-                .orElseThrow(() -> new NotFoundException("Departamento não encontrado!"));
+    public List<DepartamentoDTO> readByName(String name){
+        List<DepartamentoModel> departamentos = departamentoRepository.findByNomeDepartamentoContaining(name);
+
+        if(departamentos.isEmpty()){
+                throw new NotFoundException("Departamento não encontrado!");
+        }
+
+        return departamentos.stream().map(DepartamentoDTO::new).toList();
     }
 
     public List<FuncionarioSimplesDTO> readFuncionariosDepartamento(Integer id){
@@ -69,9 +73,11 @@ public class DepartamentoService {
                 .orElseThrow(() -> new NotFoundException("ID departamento inexistente!"));
 
         if(updateDepartamento.nomeDepartamento() != null && !updateDepartamento.nomeDepartamento().isBlank()){
-            Optional<DepartamentoModel> existingNome = departamentoRepository.findByNomeDepartamento(updateDepartamento.nomeDepartamento());
 
-            if(existingNome.isPresent() && !existingNome.get().getIdDepartamento().equals(id)){
+            if(departamentoRepository
+                    .existsByNomeDepartamentoAndIdDepartamentoNot(
+                            updateDepartamento.nomeDepartamento(),
+                            id)){
                 throw new ConflictException("Já existe um Departamento com o nome informado");
             }
             existing.setNomeDepartamento(updateDepartamento.nomeDepartamento());

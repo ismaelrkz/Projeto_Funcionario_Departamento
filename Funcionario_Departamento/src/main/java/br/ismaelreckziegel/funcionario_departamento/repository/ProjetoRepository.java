@@ -5,14 +5,34 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface ProjetoRepository extends ListCrudRepository<ProjetoModel, Integer> {
 
     @Query("""
-        SELECT d FROM ProjetoModel d 
-        WHERE REPLACE(LOWER(d.nomeProjeto), ' ', '') 
+        SELECT p FROM ProjetoModel p 
+        WHERE REPLACE(LOWER(p.nomeProjeto), ' ', '') 
         LIKE LOWER(CONCAT('%', REPLACE(:projeto, ' ', ''), '%'))
     """)
-    public Optional<ProjetoModel> findByNomeProjeto(@Param("projeto") String projeto);
+    public List<ProjetoModel> findByNomeProjetoContaining(@Param("projeto") String nomeProjeto);
+
+    @Query("""
+        SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END
+        FROM ProjetoModel p
+        WHERE REPLACE(LOWER(p.nomeProjeto), ' ', '')
+            = REPLACE(LOWER(:projeto), ' ', '')
+""")
+    boolean existsByNomeProjeto(@Param("projeto") String nomeProjeto);
+
+    @Query("""
+        SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END
+        FROM ProjetoModel p
+        WHERE REPLACE(LOWER(p.nomeProjeto), ' ', '')
+            = REPLACE(LOWER(:projeto), ' ', '')
+        AND p.idProjeto <> :id
+""")
+    boolean existsByNomeProjetoAndIdProjetoNot(
+            @Param("projeto") String nomeProjeto,
+            @Param("id") Integer idProjeto
+    );
 }
