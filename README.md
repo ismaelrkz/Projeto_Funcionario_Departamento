@@ -177,3 +177,7 @@ O projeto está em evolução, e sua estrutura foi organizada para permitir a in
 A documentação técnica completa do projeto, contendo o detalhamento das entidades, repositories, services, controllers, exceções, DTOs e regras de negócio implementadas, está disponível na documentação complementar do projeto.
 
 **[Documentação Técnica do Projeto: Projeto Funcionário & Departamento](https://app.notion.com/p/Projeto_Funcionario_Departamento-3a6f4d816bcb80699d9ec2a70edcda32?source=copy_link)**
+
+**[Projeto Banco de Dados Funcionário & Departamento](https://github.com/ismaelrkz/Banco_De_Dados_Projetos/tree/main/01_Projeto_BD_Funcionarios_Departamentos)**
+
+
